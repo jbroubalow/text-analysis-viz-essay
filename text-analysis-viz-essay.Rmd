@@ -16,7 +16,6 @@ library(viridis)
 library(grid)
 library(testthat)
 library(magrittr)
-library(methods)
 ```
 
 
@@ -61,6 +60,8 @@ inaugs <- unique(inaugurals$inauguration)
    
 ```
 
+> President Donald Trump is a unique president in many ways. He has never before held elected office and managed to win the Electoral College despite winning a plurality of the popular vote and running an extraordinarily divisive campaign. Naturally many have scrutinized his inaugural address, hoping to gain insight into what kind of a presidency the United States can expect from the Trump. The speech's bleak portrayal of the United States and "America First" rhetoric was undoubtedly jarring compared to previous inaugural addresses. But how oathbreaking was it? This essay seeks to use methods of text analysis to place President Trump's inaugural address in historical context. From the data I argue that, while an outlier in a number of macroscopic analyses, anecdotal evidence demonstrates that Trump's address is not entirely without parallel.
+
 ```{r, echo=FALSE, message=FALSE}
 presidents <- read.csv("D:/clio-II/text-analysis-viz-essay/presidents.csv",
                        skip = 3, stringsAsFactors = FALSE) %>%
@@ -90,19 +91,37 @@ word_count %>%
   
 ```
 
+> For this analysis I chose four terms that have particular resonance in American political culture: "America," "Free," "Democracy," and "Protect" to compare Trump's discourse with others. Also included are any derivatives or variations of these terms. For instance, in addition to "protect," "protectionism," "protectionist," and the like are used in this analysis. To be sure, these are somewhat random terms, but they are not so far removed from ordinary political rhetoric to be overly idiosyncratic.
+
+> As the first plot shows, Trump address is in line with the prevailing trend of the use of the term "America." From the time after the Civil War to the present, we see a steady increase in the term, perhaps indiciating Americans' developing sense of collective national identity and nationalism in the late nineteenth century through the twentieth century. 
+
+> However, the analysis shows that he did not once mention "democracy" or a variation of the term in his address, a departure from the practice of his immediate predecessors. We do see, though, that a heavy emphasis on the term was not consistent throughout the latter half of the twentieth century -- spiking at the time surrounding World War II -- and it was mentioned very infrequently during the nineteenth century. Similarly, "free" was not a major focus of Trump's speech, but, like "democracy," it had only two distinct periods where its use was conspicuous in inaugural addresses -- during the high Cold War and the initial phase of the War on Terror.  
+
+> Interestingly, Trump's biggest divergence from his contempories is his usage of "protect," seems to have more in common with the 1840s than any other time period. Without examining the texts closely, we can deduce that this connections manifests itself in the issue of protectionism, given Trump's protectionist economic rhetoric and the prominence of the issue of tarriffs in the mid-nineteenth century. Likewise, secondary spikes in the term's use coincides with renewed debates about protectionism at the end of the nineteenth and the beginning of the twentieth centuries.
+
+> Trump's sparing use of key terms in American political culture as well as the apparent connection to nineteenth century protectionist debate stands out as distinctive characteristics of his inaugural addresss compared to his immediate contemporaries.
+
+
 ```{r, echo=FALSE, warning=FALSE, message=FALSE}
 set.seed(123)
 par(family = "", bg = "black", mfrow = c(2, 2))
-recent_inaugs <- c("1993-Clinton", "2001-Bush", "2009-Obama", "2017-Trump")
-cols <- c("steelblue", "darkred", "steelblue", "darkred")
-for(i in 1:length(recent_inaugs)){
+notable_inaugs <- c("1861-Lincoln", "1933-Roosevelt", "2009-Obama", "2017-Trump")
+cols <- c("white", "white", "white", "white")
+for(i in 1:length(notable_inaugs)){
    new_words <- word_count %>%
       filter(total_count == count) %>%
-      filter(inauguration == recent_inaugs[[i]]) %$%
+      filter(inauguration == notable_inaugs[[i]]) %$%
       wordcloud(words = .$word, 
                 colors = terrain.colors(15), random.color = TRUE, scale = c(1.1, 0.9))
-   title(main = gsub("-", " ", recent_inaugs[[i]]), col.main = cols[i])
+   title(main = gsub("-", " ", notable_inaugs[[i]]), col.main = cols[i])
 }
   
 ```
 
+> Looking at the longue duree of inauguration addresses, we get a glimpse of how extraordinary Trump's speech was. It cannot be taken for granted, however, that the 2016 election was particularly acrimonious, and it could stand to reason that such a bitter campaign in a time of such domestic turmoil could yield similar rhetoric in an inaugural address. As another point of comparison, I have created wordclouds that indicate the unique language of three other speeches given during tumultuous times in American history: Abraham Lincoln's address in 1861, Franklin D. Roosevelt's address in 1933, and Barack Obama's 2009 address. Each of these inaugurations were held at times of political and economic upheaval and provide anecdotal comparions for Trump's address.
+
+> With civil war looming, Lincoln first mentioned secession along with "assail," "loath," "folly," and other unpleasantries, likely describing in unpleasant terms the secession of several southern states and the impending secession of more. Roosevelt, inheriting the United States' worst economic crisis up until that point, used language of betrayal or exploitation, using words such as "falsity," "overbalance," and "locusts." It is not difficult to imagine that he was speaking to perceived structural problems in the American economic system that allowed the nation to fall into such a deep depression. Obama, also facing a tremendous economic crisis and deep political divisions, introduced words such as "childish" and "stale" to the inauguration lexicon. But he balanced negativity with seemingly positive words like "selflessness" and "leisure," which seems to mirror the theme of his campaign: turning from destructive atavism toward hopeful progress. 
+
+> Trump's speech will likely be remembered for introducing highly charged words like "windswept," "sad," "ravages," and "disrepair" among others. While Trump's speech on appearance is undoubtedly much more aggressive, less nuanced, and on the whole bleaker than the others -- to say nothing of their merits -- We can see that negativity in an inaugural address is not unusal, especially in times of particular upheaval. 
+
+> Unfortunately, this mode of analysis is limited, as, like measuring frequency, we do not necessarily have a sense of narrative context outside of a historical perspective. Additionally, we do not get a sense of tone, as sentiment analysis is lacking in effectiveness with these texts. We are, however, able to glean patterns that establish a historical context for modern affairs.

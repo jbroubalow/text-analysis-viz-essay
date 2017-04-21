@@ -1,0 +1,68 @@
+---
+title: "Text Analysis Visualization Essay"
+author: "Justin Broubalow"
+date: "April 24, 2017"
+output: html_document
+---
+
+```{r, message=FALSE, echo=FALSE}
+library(quanteda)
+library(tidytext)
+library(tidyverse)
+library(scales)
+library(stringr)
+library(wordcloud)
+library(viridis)
+library(grid)
+library(testthat)
+library(magrittr)
+library(methods)
+```
+
+
+```{r, warning=FALSE, echo=FALSE}
+trump <- paste(readLines("D:/clio-II/text-analysis-viz-essay/trump-inaug.txt"),
+               collapse = " ")
+trump_df <- data_frame(fulltext = trump,
+                       inauguration = "2017-Trump")
+
+inaugurals <- data_frame(fulltext = inaugTexts,
+			inauguration = names(inaugTexts)) %>%
+  rbind(trump_df) %>% 
+   mutate(year = as.numeric(str_sub(inauguration, 1, 4)),
+          president = str_sub(inauguration, start = 6)) %>%
+   unnest_tokens(word, fulltext, token = "words") %>%
+   group_by(inauguration) %>%
+   mutate(sequence = 1:n()) 
+
+```
+
+```{r, echo=FALSE}
+word_count <- inaugurals %>%
+   group_by(inauguration, word, year, president) %>%
+   summarize(count = n()) %>%
+   bind_tf_idf(word, inauguration, count) %>%
+   ungroup()
+
+
+expect_equal(nrow(inaugurals), sum(word_count$count))
+
+all_counts <- word_count %>%
+   group_by(word) %>%
+   summarize(total_count = sum(count)) %>%
+   arrange(desc(total_count))
+
+expect_equal(sum(all_counts$total_count), sum(word_count$count))
+
+word_count <- word_count %>%
+   left_join(all_counts, by = "word")
+
+inaugs <- unique(inaugurals$inauguration)
+   
+```
+
+```{r, echo=FALSE}
+
+
+```
+

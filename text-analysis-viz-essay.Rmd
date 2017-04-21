@@ -61,7 +61,7 @@ inaugs <- unique(inaugurals$inauguration)
    
 ```
 
-```{r, echo=FALSE}
+```{r, echo=FALSE, message=FALSE}
 presidents <- read.csv("D:/clio-II/text-analysis-viz-essay/presidents.csv",
                        skip = 3, stringsAsFactors = FALSE) %>%
 
@@ -87,6 +87,22 @@ word_count %>%
            "Presidents labeled if they used the word or a variant.") +
    labs(x = "", y = "Number of times used as a percentage of all words") +
    scale_y_continuous(label = percent)
+  
+```
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+set.seed(123)
+par(family = "", bg = "black", mfrow = c(2, 2))
+recent_inaugs <- c("1993-Clinton", "2001-Bush", "2009-Obama", "2017-Trump")
+cols <- c("steelblue", "darkred", "steelblue", "darkred")
+for(i in 1:length(recent_inaugs)){
+   new_words <- word_count %>%
+      filter(total_count == count) %>%
+      filter(inauguration == recent_inaugs[[i]]) %$%
+      wordcloud(words = .$word, 
+                colors = terrain.colors(15), random.color = TRUE, scale = c(1.1, 0.9))
+   title(main = gsub("-", " ", recent_inaugs[[i]]), col.main = cols[i])
+}
   
 ```
 

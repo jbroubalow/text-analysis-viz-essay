@@ -61,3 +61,32 @@ inaugs <- unique(inaugurals$inauguration)
    
 ```
 
+```{r, echo=FALSE}
+presidents <- read.csv("D:/clio-II/text-analysis-viz-essay/presidents.csv",
+                       skip = 3, stringsAsFactors = FALSE) %>%
+
+   select(inauguration)
+
+
+word_count %>%
+   mutate(word = ifelse(grepl("americ", word), "america", word),
+          word = ifelse(grepl("democra", word), "democracy", word),
+          word = ifelse(grepl("protect", word), "protect", word),
+          word = ifelse(grepl("free", word), "free", word)) %>%
+   group_by(inauguration, president, year, word) %>%
+   summarize(count = sum(count)) %>% 
+   group_by(inauguration, president, year) %>%
+   mutate(relative_count = count / sum(count)) %>%
+   filter(word %in% c("america", "free", "democracy", "protect")) %>%
+   left_join(presidents, by = "inauguration") %>% 
+   ggplot(aes(x = year, y = relative_count)) +
+   geom_line() +
+  geom_point() +
+   facet_wrap(~word, scales = "free_y") +
+   ggtitle("Changing use of selected words in inaugural addresses",
+           "Presidents labeled if they used the word or a variant.") +
+   labs(x = "", y = "Number of times used as a percentage of all words") +
+   scale_y_continuous(label = percent)
+  
+```
+
